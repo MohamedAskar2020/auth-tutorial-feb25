@@ -2,6 +2,7 @@ import { generateTokenAndSetCookie } from '../utils/generateTokenAndSetCookie.js
 import bcryptjs from 'bcryptjs'
 import crypto from 'crypto'
 import { User } from '../models/user.model.js'
+import { sendVerificationEmail } from '../mailtrap/emails.js'
 
 // signup
 export const signup = async (req, res) => {
@@ -30,6 +31,8 @@ export const signup = async (req, res) => {
     await user.save()
     // generate token and set cookie
     generateTokenAndSetCookie(res,user._id)
+    // send verification email
+    sendVerificationEmail(user.email, verificationToken)
     res
       .status(201)
       .json({
